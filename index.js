@@ -1,147 +1,103 @@
+const lat = 47.6062; // Latitude of Seattle
+const lon = -122.3321; // Longitude of Seattle
 
+// Fetch weather data from Open-Meteo API
+const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m&current_weather=true`;
 
+fetch(url)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Convert response to JSON
+    })
+    .then(data => {
+        // Store data globally so it can be used later when switching views
+        window.weatherData = data;
 
+        // Initially display current weather
+        displayCurrentWeather(data.current_weather);
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
 
-// // Container to display weather data
-// const weatherDataDiv = document.getElementById('weatherData');
-
-// // Function to fetch and display current weather data for Seattle
-// function fetchWeather() {
-//     const url = 'https://api.open-meteo.com/v1/forecast?latitude=47.6062&longitude=-122.3321&current_weather=true';
-
-//     fetch(url)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error('Network response was not ok');
-//             }
-//             return response.json(); 
-//         })
-//         .then(data => {
-//             displayWeatherData(data.current_weather); // Call the display function
-//         })
-//         .catch(error => {
-//             console.error('There was a problem with the fetch operation:', error);
-//         });
-// }
-
-// // Function to display current weather data  in Seattle
-// function displayWeatherData(weather) {
-//     weatherDataDiv.innerHTML = ''; // Clear previous data
-
-//     const heading = document.createElement('h2');
-//     heading.textContent = 'Current Weather in Seattle';
-//     weatherDataDiv.appendChild(heading);
-
-//     const temperature = document.createElement('p');
-//     temperature.textContent = `Temperature: ${weather.temperature}°C`;
-//     weatherDataDiv.appendChild(temperature);
-
-//     const windSpeed = document.createElement('p');
-//     windSpeed.textContent = `Wind Speed: ${weather.windspeed} km/h`;
-//     weatherDataDiv.appendChild(windSpeed);
-
- 
-// }
-
-// // Initial fetch for Seattle weather data
-// fetchWeather();
-
-
-   
-
-
-
-// Container for displaying weather data
-const currentWeatherDiv = document.getElementById('currentWeatherData');
-const hourlyForecastDiv = document.getElementById('hourlyForecastData');
-const currentWeatherBtn = document.getElementById('currentWeatherBtn');
-const hourlyForecastBtn = document.getElementById('hourlyForecastBtn');
-
-// Function to fetch and display current weather data for Seattle
-function fetchCurrentWeather() {
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=47.6062&longitude=-122.3321&current_weather=true';
-
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); // Convert the response to JSON
-        })
-        .then(data => {
-            displayCurrentWeather(data.current_weather); // Display current weather
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}
-
-// Function to fetch and display hourly temperature forecast for Seattle
-function fetchHourlyForecast() {
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=47.6062&longitude=-122.3321&hourly=temperature_2m';
-
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); // Convert the response to JSON
-        })
-        .then(data => {
-            displayHourlyForecast(data.hourly.temperature_2m); // Display hourly forecast
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}
-
-// Function to display current weather data
-function displayCurrentWeather(weather) {
+// Function to display the current weather
+function displayCurrentWeather(currentWeather) {
+    const currentWeatherDiv = document.getElementById('currentWeather');
     currentWeatherDiv.innerHTML = ''; // Clear previous data
-    currentWeatherDiv.style.display = 'block'; // Show this section
-    hourlyForecastDiv.style.display = 'none'; // Hide the other section
 
-    const heading = document.createElement('h2');
-    heading.textContent = 'Current Weather in Seattle';
-    currentWeatherDiv.appendChild(heading);
-
-    const temperature = document.createElement('p');
-    temperature.textContent = `Temperature: ${weather.temperature}°C`;
-    currentWeatherDiv.appendChild(temperature);
-
-    const windSpeed = document.createElement('p');
-    windSpeed.textContent = `Wind Speed: ${weather.windspeed} km/h`;
-    currentWeatherDiv.appendChild(windSpeed);
+    const weatherInfo = document.createElement('h2');
+    weatherInfo.textContent = `Current Temperature in Seattle: ${currentWeather.temperature}°C`;
+    currentWeatherDiv.appendChild(weatherInfo);
 }
 
-// Function to display hourly forecast data
+// Function to display hourly forecast data with actual time in AM/PM format
 function displayHourlyForecast(hourlyTemps) {
+    const hourlyForecastDiv = document.getElementById('hourlyForecast');
     hourlyForecastDiv.innerHTML = ''; // Clear previous data
-    currentWeatherDiv.style.display = 'none'; // Hide the other section
-    hourlyForecastDiv.style.display = 'block'; // Show this section
 
     const heading = document.createElement('h2');
     heading.textContent = 'Hourly Temperature Forecast in Seattle';
     hourlyForecastDiv.appendChild(heading);
 
     const forecastList = document.createElement('ul');
+    let currentTime = new Date(); // Get the current date and time
+
     hourlyTemps.forEach((temp, index) => {
         const listItem = document.createElement('li');
-        listItem.textContent = `Hour ${index + 1}: ${temp}°C`;
+
+        // Increment time by the forecasted hour
+        const futureTime = new Date(currentTime.getTime() + index * 60 * 60 * 1000);
+        listItem.textContent = `${formatTime(futureTime)}: ${temp}°C`;
+
         forecastList.appendChild(listItem);
     });
 
     hourlyForecastDiv.appendChild(forecastList);
 }
 
-// Event listeners for buttons to show/hide data
-currentWeatherBtn.addEventListener('click', () => {
-    fetchCurrentWeather();
+// Helper function to format time in 12-hour 
+function formatTime(date) {
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let period = 'AM';
+
+    if (hours >= 12) {
+        period = 'PM';
+    }
+    if (hours > 12) {
+        hours -= 12;
+    }
+    if (hours === 0) {
+        hours = 12;
+    }
+
+    // Add leading zero to minutes if needed
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    return `${hours}:${minutes} ${period}`;
+}
+
+// Add event listeners for buttons to switch views
+document.getElementById('showCurrentWeatherBtn').addEventListener('click', () => {
+    document.getElementById('currentWeather').style.display = 'block';
+    document.getElementById('hourlyForecast').style.display = 'none';
+
+    // If current weather hasn't been displayed yet
+    if (!document.getElementById('currentWeather').innerHTML) {
+        displayCurrentWeather(window.weatherData.current_weather);
+    }
 });
 
-hourlyForecastBtn.addEventListener('click', () => {
-    fetchHourlyForecast();
-});
+document.getElementById('showHourlyForecastBtn').addEventListener('click', () => {
+    document.getElementById('currentWeather').style.display = 'none';
+    document.getElementById('hourlyForecast').style.display = 'block';
 
-// Load the current weather by default
-fetchCurrentWeather();
+    // Ensure the hourly forecast data is available
+    if (window.weatherData && window.weatherData.hourly && window.weatherData.hourly.temperature_2m) {
+        displayHourlyForecast(window.weatherData.hourly.temperature_2m);
+    } else {
+        console.error('Hourly forecast data not available.');
+    }
+});

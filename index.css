@@ -2,27 +2,39 @@ body {
     font-family: Arial, sans-serif;
     padding: 20px;
     background-color: #f0f8ff;
+
 }
 
 h1, h2 {
     color: #333;
+    text-align: center;
 }
 
 nav {
     margin-bottom: 20px;
+    
 }
+
+.container {
+    display: flex;
+    justify-content: center; /* Centers the button horizontally */
+    align-items: center; /* Centers the button vertically (optional) */
+  }
 
 button {
     padding: 10px 20px;
     margin-right: 10px;
-    background-color: #4CAF50;
+    background-color: #4c75c3;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 3px;
+   
+   
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #ca4eef;
 }
 
 #currentWeatherData, #hourlyForecastData {
@@ -31,6 +43,7 @@ button:hover {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 p, li {

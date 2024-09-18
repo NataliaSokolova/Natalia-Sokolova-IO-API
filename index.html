@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Open API Weather App</title>
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <h1>Seattle Weather</h1>
-    <nav>
-      <button id="currentWeatherBtn">Show Current Weather</button>
-      <button id="hourlyForecastBtn">Show Hourly Forecast</button>
-    </nav>
-    <div id="currentWeatherData" style="display: none"></div>
-    <div id="hourlyForecastData" style="display: none"></div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seattle Weather App</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <h1>Weather Forecast in Seattle</h1>
+    <div class="container">
+    <!-- Buttons to toggle views -->
+    <button id="showCurrentWeatherBtn">Show Current Weather</button>
+    <button id="showHourlyForecastBtn">Show Hourly Forecast</button>
+    </div>
+    <div id="currentWeather" style="display: none;">
+        <!-- Current weather conditions will be displayed here -->
+    </div>
+
+    <div id="hourlyForecast" style="display: none;">
+        <!-- Hourly forecast will be displayed here -->
+    </div>
+    
     <script src="index.js"></script>
-  </body>
+</body>
 </html>
