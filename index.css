@@ -1,62 +1,137 @@
+/* General page layout */
 body {
     font-family: Arial, sans-serif;
-    padding: 20px;
     background-color: #f0f8ff;
-
-}
-
-h1, h2 {
-    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
     text-align: center;
 }
 
-nav {
-    margin-bottom: 20px;
-    
-}
-
+/* Container for buttons */
 .container {
-    display: flex;
-    justify-content: center; /* Centers the button horizontally */
-    align-items: center; /* Centers the button vertically (optional) */
-  }
-
-button {
-    padding: 10px 20px;
-    margin-right: 10px;
-    background-color: #4c75c3;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 3px;
-   
-   
+    margin: 20px 0;
 }
 
-button:hover {
-    background-color: #ca4eef;
+/* Style for the heading */
+h1 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
 }
 
-#currentWeatherData, #hourlyForecastData {
-    margin-top: 20px;
+/* Style for weather information */
+#currentWeather, #hourlyForecast {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px 0;
+    display: none;
 }
 
-p, li {
-    font-size: 18px;
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 1.2rem;
+    margin: 10px 0;
     color: #555;
-    margin: 5px 0;
 }
 
+/* List for forecast */
 ul {
     list-style-type: none;
-    padding-left: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    color: #444;
 }
 
 li {
-    margin: 5px 0;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+li:last-child {
+    border-bottom: none;
+}
+
+/* Weather Icon */
+img {
+    width: 100px;
+    height: 100px;
+    margin: 20px 0;
+}
+
+/* Style for input */
+input[type="text"] {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 300px;
+    margin-bottom: 20px;
+}
+
+/* Style for buttons */
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Container for city input and buttons */
+.city-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    input[type="text"] {
+        width: 80%;
+    }
+
+    button {
+        width: 80%;
+        font-size: 0.9rem;
+    }
+}
+/* Style for weather icons */
+.weather-icon {
+    width: 100px;
+    height: 100px;
+    margin: 20px auto;
+    display: block;
 }
