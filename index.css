@@ -55,6 +55,7 @@ ul {
     padding: 0;
     font-size: 1rem;
     color: #444;
+    text-align: left;
 }
 
 li {
@@ -137,4 +138,21 @@ button:focus {
     height: 100px;
     margin: 20px auto;
     display: block;
+}
+
+.day-of-week {
+    font-weight: bold;
+    color: #333;
+}
+
+.max-temp {
+    color: red;
+}
+
+.min-temp {
+    color: blue;
+}
+
+.uv-index {
+    color: green;
 }
