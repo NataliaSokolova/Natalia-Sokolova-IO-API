@@ -29,7 +29,7 @@ function fetchWeatherByCity(city) {
     })
     .then((weatherData) => {
       window.weatherData = weatherData; // Store weather data globally
-      displayCurrentWeather(weatherData.current_weather); // Display current weather
+      displayCurrentWeather(weatherData.current_weather,city); // Display current weather and city
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -37,13 +37,13 @@ function fetchWeatherByCity(city) {
 }
 
 // Function to display the current weather with UV index and wind
-function displayCurrentWeather(currentWeather) {
+function displayCurrentWeather(currentWeather,city) {
   const currentWeatherDiv = document.getElementById("currentWeather");
   currentWeatherDiv.innerHTML = ""; // Clear previous data
 
   // Create elements for weather data
   const weatherInfo = document.createElement("h2");
-  weatherInfo.textContent = `Current Temperature: ${currentWeather.temperature}°C`;
+  weatherInfo.textContent = `Current Temperature in ${city}: ${currentWeather.temperature}°C`;
 
   const windInfo = document.createElement("p");
   windInfo.textContent = `Wind Speed: ${currentWeather.windspeed} km/h`;
@@ -59,7 +59,7 @@ function displayCurrentWeather(currentWeather) {
   const sunriseInfo = document.createElement("p");
   sunriseInfo.textContent = `Sunrise: ${hour} AM`;
 
-  const sunsetTime = window.weatherData.daily.sunrise[0];
+  const sunsetTime = window.weatherData.daily.sunset[0];
   const sethour = sunsetTime.split("T")[1];
   const sunsetInfo = document.createElement("p");
   sunsetInfo.textContent = `Sunset: ${sethour} PM`;
@@ -116,7 +116,7 @@ document
     if (city) {
       fetchWeatherByCity(city); // Fetch and display weather for the entered city
       document.getElementById("currentWeather").style.display = "block";
-      document.getElementById("hourlyForecast").style.display = "none";
+      document.getElementById("sevendaysForecast").style.display = "none";
     } else {
       alert("Please enter a city name");
     }
@@ -124,15 +124,15 @@ document
 
 // Event listener for 'Show 7 Days Forecast' button
 document
-  .getElementById("showHourlyForecastBtn")
+  .getElementById("showDailyForecastBtn")
   .addEventListener("click", () => {
     const city = document.getElementById("cityInput").value;
 
     // Check if the user has entered a city and weather data is available for that city
     if (city && window.weatherData && window.weatherData.daily) {
-      displaySevenDayForecast(window.weatherData.daily);
+      displaySevenDayForecast(window.weatherData.daily,city);
       document.getElementById("currentWeather").style.display = "none";
-      document.getElementById("hourlyForecast").style.display = "block";
+      document.getElementById("sevendaysForecast").style.display = "block";
     } else if (!city) {
       alert("Please enter a city name.");
     } else {
@@ -141,15 +141,19 @@ document
   });
 
 // Function to display 7 days forecast with days of the week, UV index, and temperature
-function displaySevenDayForecast(dailyTemps) {
-  const forecastDiv = document.getElementById("hourlyForecast");
+function displaySevenDayForecast(dailyTemps,city) {
+  const forecastDiv = document.getElementById("sevendaysForecast");
   forecastDiv.innerHTML = ""; // Clear previous data
 
   const heading = document.createElement("h2");
-  heading.textContent = "7 Days Temperature Forecast";
+  heading.textContent = `7 Days Temperature Forecast in ${city}`;
+  heading.classList.add('dailyheading')
   forecastDiv.appendChild(heading);
 
-  const forecastList = document.createElement("ul");
+
+  const forecastList = document.createElement("div"); // Create the forecast list container
+  forecastList.classList.add("forecast-container");
+
 
   // Get the current date and use it to calculate the next 7 days
   const currentDate = new Date();
@@ -164,8 +168,15 @@ function displaySevenDayForecast(dailyTemps) {
   ];
 
   dailyTemps.temperature_2m_max.forEach((maxTemp, index) => {
+    
     const minTemp = dailyTemps.temperature_2m_min[index];
     const uvIndex = dailyTemps.uv_index_max[index];
+    const sunrise = dailyTemps.sunrise[index];
+    const hour = sunrise.split("T")[1];
+    const sunset = dailyTemps.sunset[index];
+    const sethour = sunset.split("T")[1];
+
+  
 
     // Calculate the day of the week
     const futureDate = new Date(currentDate);
@@ -173,16 +184,21 @@ function displaySevenDayForecast(dailyTemps) {
 
     const dayOfWeek = daysOfWeek[futureDate.getDay()]; // Get day of the week name
 
-    const listItem = document.createElement("li");
+    const forecastBlock = document.createElement("div");
+    forecastBlock.classList.add("forecast-block");
 
-    listItem.innerHTML = `
-          <span class="day-of-week">${dayOfWeek}</span>: 
-          <span class="max-temp">Max: ${maxTemp}°C</span>, 
-          <span class="min-temp">Min: ${minTemp}°C</span>, 
+    forecastBlock.innerHTML = `
+          
+          <span class="day-of-week">${dayOfWeek}</span> 
+          <span class="max-temp">Max: ${maxTemp}°C</span> 
+          <span class="min-temp">Min: ${minTemp}°C</span> 
           <span class="uv-index">UV Index: ${uvIndex}</span>
+          <span class="sunrise">Sunrise: ${hour} AM</span>
+          <span class="sunset">Sunset: ${sethour} PM</span>
+          
       `;
 
-    forecastList.appendChild(listItem);
+      forecastList.appendChild(forecastBlock);
   });
 
   forecastDiv.appendChild(forecastList);
