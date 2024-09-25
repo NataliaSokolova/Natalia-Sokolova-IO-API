@@ -190,9 +190,9 @@ function displaySevenDayForecast(dailyTemps,city) {
     forecastBlock.innerHTML = `
           
           <span class="day-of-week">${dayOfWeek}</span> 
-          <span class="max-temp">Max: ${maxTemp}°C</span> 
-          <span class="min-temp">Min: ${minTemp}°C</span> 
-          <span class="uv-index">UV Index: ${uvIndex}</span>
+          <span class="max-temp">High temperature: ${maxTemp}°C</span> 
+          <span class="min-temp">Low temperature: ${minTemp}°C</span> 
+          <span class="uv-index">Max UV Index: ${uvIndex}</span>
           <span class="sunrise">Sunrise: ${hour} AM</span>
           <span class="sunset">Sunset: ${sethour} PM</span>
           
